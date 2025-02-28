@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.regex.*;
+
 
 class User {
     private int id;
@@ -139,6 +141,15 @@ public class BroadbandApp {
     private static final List<Feedback> feedbackList = new ArrayList<>();
     private static final UserManager userManager = UserManager.getInstance();
 
+    //Email Validation..//
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+    private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
+    public static boolean isValidEmail(String email) {
+        if (email == null) return false;
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         servicePlans.add(new ServicePlan(1, "Basic", "50Mbps", 499.99));
@@ -162,8 +173,14 @@ public class BroadbandApp {
                     case 1:
                         System.out.print("Enter name: ");
                         String name = scanner.nextLine();
-                        System.out.print("Enter email: ");
-                        String email = scanner.nextLine();
+                        String email;
+                        do {
+                            System.out.println("Enter email: ");
+                            email = scanner.nextLine();
+                            if (!isValidEmail(email)) {
+                                System.out.println("Invalid email format! Please enter a valid email.");
+                            }
+                        } while (!isValidEmail(email));
                         System.out.print("Enter password: ");
                         String password = scanner.nextLine();
                         userManager.registerUser(name, email, password);

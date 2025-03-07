@@ -1,0 +1,11 @@
+{
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "Controller/lib/mysql-connector-j-9.2.0.jar"
+        ],
+        "exclude": [
+            "lib/mysql-connector-j-9.2.0.jar"
+        ]
+    }
+}

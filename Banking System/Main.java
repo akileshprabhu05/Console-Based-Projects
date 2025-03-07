@@ -1,29 +1,20 @@
 import java.util.*;
-import Model.*;
-import View.*;
 import Controller.*;
-import Model.Customer;
 
 public class Main {
     public static void main(String[] args){
-        BankModel model = new BankModel();
-        BankView view = new BankView();
-        BankController Controller = new BankController(model, view);
+        BankController Controller = new BankController();
         Scanner scanner =new Scanner(System.in);
-        boolean flag = false;
-        Customer check = null;
 
         while(true){
             System.out.println("<------Welcome to SBI Bank------>");
+            System.out.println("1. Create Customer & Account");
+            System.out.println("2. Login in to Account");
+            System.out.println("3. Exit");
+            System.out.println("Enter Choice");
+            int Choice = scanner.nextInt();
 
-            if(!flag){
-                System.out.println("1. Create Customer & Account");
-                System.out.println("2. Login in to Account");
-                System.out.println("3. Exit");
-                System.out.println("Enter Choice");
-                int Choice = scanner.nextInt();
-
-                switch (Choice) {
+            switch (Choice) {
                     case 1:
                         System.out.println("Enter your Name: ");
                         scanner.nextLine();
@@ -53,16 +44,51 @@ public class Main {
                         System.out.println("Enter Your Pin");
                         int Pin = scanner.nextInt();
 
-                        check = model.findCustomerById(CustId);
-                        if(check==null){
-                            System.out.println("Invalid Customer Id.Not Found");
-                        }
-                        else if(check.getPin()!=Pin){
-                            System.out.println("Incorrect Pin. Please try again");
+                        if(Controller.loginCustomer(CustId, Pin)){
+                            System.out.println("Login Success, Happy Banking!!");
+
+                            boolean flag = true;
+                            while(flag){
+                                System.out.println("1. View Account Details");
+                                System.out.println("2. Check Balance");
+                                System.out.println("3. Deposit Ammount");
+                                System.out.println("4. Withdraw Ammount");
+                                System.out.println("5. LogOut");
+                                int SubChoice = scanner.nextInt();
+                                switch (SubChoice) {
+                                    case 1:
+                                        Controller.viewCustomer(CustId);
+                                        break;
+                                    
+                                    case 2:
+                                        Controller.checkBalance(CustId);
+                                        break;
+                                    
+                                    case 3:
+                                        System.out.println("Enter Amount to Deposit");
+                                        int amount = scanner.nextInt();
+                                        Controller.depositAmount(CustId, amount);
+                                        break;
+                                    
+                                    case 4:
+                                        System.out.println("Enter Amount");
+                                        int Amount = scanner.nextInt();
+                                        Controller.withdrawAmount(CustId, Amount);
+                                        break;
+                                    
+                                    case 5:
+                                        System.out.println("Exiting...");
+                                        flag=false;
+                                        break;
+                                    
+                                    default:
+                                        System.out.println("Enter a valid choice");
+                                        break;
+                                }
+                            }
                         }
                         else{
-                            System.out.println("Login Successful! Welcome, "+check.getName());
-                            flag=true;
+                            System.out.println("Invalid Customer Id or Pin");
                         }
                         break;
                     
@@ -74,51 +100,6 @@ public class Main {
                     default:
                         break;
                 }
-            }
-            else{
-                System.out.println("1. View Account Details");
-                System.out.println("2. Check Balance");
-                System.out.println("3. Deposit Ammount");
-                System.out.println("4. Withdraw Ammount");
-                System.out.println("5. Exit");
-                int Choice = scanner.nextInt();
-                int CustId = check.getCustomerID();
-
-                switch (Choice) {
-                    case 1:
-                        System.out.println(model.findCustomerById(CustId));
-                        break;
-                    
-                    case 2:
-                        Controller.checkBalance(CustId);
-                        break;
-
-                    case 3:
-                        System.out.println("Enter Account Id (1.Loan Account 2.Savings Account)");
-                        int AccountId = scanner.nextInt();
-                        System.out.println("Enter Amount to Deposit");
-                        int amount = scanner.nextInt();
-                        Controller.depositAmount(CustId, AccountId, amount);
-                        break;
-
-                    case 4:
-                        System.out.println("Enter Account Id (1.Loan Account 2.Savings Account)");
-                        int accountId = scanner.nextInt();
-                        System.out.println("Enter Amount");
-                        int Amount = scanner.nextInt();
-                        Controller.withdrawAmount(CustId, accountId, Amount);
-                        break;
-                    
-                    case 5:
-                        System.out.println("Exiting...");
-                        scanner.close();
-                        return;
-
-                    default:
-                        System.out.println("Enter a valid choice");
-                        break;
-                }
-            }
         }
 
     }
